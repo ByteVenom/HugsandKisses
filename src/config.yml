@@ -1,0 +1,23 @@
+#DEFAULT CONFIG.YML FOR HUGGS
+
+Reciever_Message: You have just been Hugged By %S
+#Message Reciever Gets Hugged %P = Target Player, %S = Sender
+
+
+Sender_Message: You Just Hugged %P
+#Message Sender Gets Hugged %P = Target Player, %S = Sender
+
+Kiss_Message_Reciever: Player %S Kissed You
+#Message Sender Gets After Being Kissed %P = Target Player, %S = Sender
+
+Kiss_Message_Sender: YOU KISSED %P
+#Message Sender Gets After Being Kissed %P = Target Player, %S = Sender
+
+Hug_Time: 4
+#How Long Hugs Last
+
+Kiss_Time: 4
+#How Long Hugs Last
+
+SPAWN_BABY: true
+#Decide to spawn baby villagers on Kiss
