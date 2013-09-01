@@ -1,8 +1,8 @@
 package com.gmail.nomad856.kamakarzy;
 
+
 import java.util.HashMap;
 import java.util.logging.Logger;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.EntityEffect;
@@ -11,7 +11,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Wolf;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 public class Main extends JavaPlugin {
@@ -33,6 +32,7 @@ public class Main extends JavaPlugin {
 		saveDefaultConfig();
 		getConfig().options().copyDefaults(true);
 		saveConfig();
+		
 	}
 
 	@Override
@@ -360,6 +360,26 @@ public class Main extends JavaPlugin {
 			} else {
 				sender.sendMessage("Can only be used by player");
 			}
+		}else if(cmd.getName().equalsIgnoreCase("hugs")){
+			if(args.length <1){
+				sender.sendMessage("/hugs reload");
+				
+			}else if(args[0].equalsIgnoreCase("reload")){
+				try{
+					this.config.reloadConfig();
+					
+					sender.sendMessage("Hugs Configuration reloaded");
+				}catch(Exception ex){
+					sender.sendMessage("Hugs Configuration failed to reload");
+					ex.printStackTrace();
+				}
+			}else{
+				sender.sendMessage(ChatColor.RED + "/hugs reload");
+				
+			}
+			
+			
+			
 		}
 		return true;
 	}
