@@ -7,4 +7,5 @@ public class Permisssions {
 	public Permission hug = new Permission("hugs.canhug");
 	public Permission kiss = new Permission("hugs.cankiss");
 	public Permission marry = new Permission("hugs.canmarry");
+	public Permission marrybonus = new Permission("hugs.canmarrybonus");
 }

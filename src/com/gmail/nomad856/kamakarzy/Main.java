@@ -48,26 +48,39 @@ public class Main extends JavaPlugin {
 
 	public void Villager(Player p) {
 		org.bukkit.entity.Villager v = p.getWorld().spawn(p.getLocation(),
-				org.bukkit.entity.Villager.class);
+		org.bukkit.entity.Villager.class);
 		v.setBaby();
 	}
-
+	public Player getPlayer(String name) {
+        name = name.toLowerCase();
+        for (Player player : Bukkit.getOnlinePlayers()) {
+        	
+            if (player.getName().toLowerCase().contains(name) || player.getDisplayName().toLowerCase().contains(name)) {
+                return player;
+            }
+        }
+        return null;
+    }
+		
+		
+		
+		
+	
 	public boolean onCommand(CommandSender sender, Command cmd,String commandLabel, String[] args) {
 
-		if (cmd.getName().equalsIgnoreCase("hugs")) {
+		if (cmd.getName().equalsIgnoreCase("hug")) {
 			if (sender instanceof Player) {
 				if (args.length > 0) {
 					
-					Player target = Bukkit.getPlayer(args[0]);
-					
+					Player target = getPlayer(args[0]);
+			
 				
 					if (target != null) {
 						final Player player = (Player) sender;
 						Location playerLoc = player.getLocation();
 						Location targetLoc = target.getLocation();
 						
-						if (playerLoc.getWorld().getUID()
-								.equals(targetLoc.getWorld().getUID())) {
+						if (playerLoc.getWorld().getUID().equals(targetLoc.getWorld().getUID())) {
 							if (playerLoc.distanceSquared(targetLoc) < 4)
 								if (player.hasPermission(new Permisssions().hug)) {
 									{
@@ -89,22 +102,8 @@ public class Main extends JavaPlugin {
 										};
 										run.runTaskTimer(this, 0L, 20L);
 
-										target.sendMessage((ChatColor
-												.translateAlternateColorCodes(
-														'&',
-														getConfig()
-																.getString(
-																		"Reciever_Message")
-																.replace(
-																		"%P",
-																		target.getName())
-																.replace(
-																		"%S",
-																		sender.getName()))));
-										player.sendMessage((ChatColor.translateAlternateColorCodes(
-														'&',
-														getConfig()
-																.getString(
+										target.sendMessage((ChatColor.translateAlternateColorCodes('&',getConfig().getString("Reciever_Message").replace("%P",target.getName()).replace("%S",sender.getName()))));
+										player.sendMessage((ChatColor.translateAlternateColorCodes('&',getConfig().getString(
 																		"Sender_Message")
 																.replace(
 																		"%P",
@@ -142,11 +141,37 @@ public class Main extends JavaPlugin {
 				sender.sendMessage("This command can only be used by a player.");
 				return true;
 			}
-		} else if (cmd.getName().equalsIgnoreCase("kiss")) {
+		}/*else if(cmd.getName().equalsIgnoreCase("marrybonus")){
+			if(sender instanceof Player){
+				if(args.length == 0){
+					final Player player = (Player) sender;
+					if(this.config.contains(player.getName())){
+						
+						
+					}else{
+						player.sendMessage("You're not married");
+					}
+					
+				}else{
+					sender.sendMessage(ChatColor.RED + "Too many arguments!");
+					
+				}
+				
+				
+			}else{
+				sender.sendMessage("This command can only be used by a player.");
+				return true;
+				
+			}
+			
+			
+			
+			
+		}*/ else if (cmd.getName().equalsIgnoreCase("kiss")) {
 			if (sender instanceof Player) {
 				System.out.println(args.length);
 				if (args.length > 0) {
-					Player target = Bukkit.getPlayer(args[0]);
+					Player target = getPlayer(args[0]);
 					
 					if (target != null) {
 						if(!args[0].equals(sender.getName())){
@@ -243,11 +268,11 @@ public class Main extends JavaPlugin {
 				sender.sendMessage("This command can only be used by a player.");
 				return true;
 			}
-		} else if (cmd.getName().equalsIgnoreCase("willyoumarryme")) {
+		} else if (cmd.getName().equalsIgnoreCase("marry")) {
 			if (sender instanceof Player) {
 				System.out.println(args.length);
 				if (args.length > 0) {
-					Player target = Bukkit.getPlayer(args[0]);
+					Player target = getPlayer(args[0]);
 
 					if (target != null) {
 						final Player player = (Player) sender;
@@ -257,25 +282,26 @@ public class Main extends JavaPlugin {
 						if (playerLoc.getWorld().getUID()
 								.equals(targetLoc.getWorld().getUID())) {
 							if (playerLoc.distanceSquared(targetLoc) < 4)
-								if (player
-										.hasPermission(new Permisssions().marry)) {
-									if (this.config.contains(player.getName())) {
-										player.sendMessage("YOU CANNOT PERFORM BIGAMY ON THIS SERVER");
-									} else {
-										marriage.put(target.getName(),
-												player.getName());
-										target.sendMessage("will you marry me love "
-												+ target.getDisplayName()+ "?");
-									}
+								if (player.hasPermission(new Permisssions().marry)) {
+									if(!args[0].equals(sender.getName())){
+										if (this.config.contains(player.getName())) {
+											player.sendMessage("You are already married.");
+										} else {
+											marriage.put(target.getName(),player.getName());
+											target.sendMessage(player.getDisplayName() + " would like to marry you");
+										
+										}
 
-								} else {
-									player.sendMessage(ChatColor.RED
-											+ "YOU DO NOT HAVE PERMISSION TO MARRY");
+									}else{
+										player.sendMessage("Marrying yourself is not possible!");
+										return true;
+									}
+									} else {
+										player.sendMessage(ChatColor.RED+ "YOU DO NOT HAVE PERMISSION TO MARRY");
 									return true;
 								}
 							else {
-								sender.sendMessage(target.getDisplayName()
-										+ ChatColor.RED + " is too far away.");
+								sender.sendMessage(target.getDisplayName()+ ChatColor.RED + " is too far away.");
 								return true;
 							}
 						} else {
@@ -301,19 +327,28 @@ public class Main extends JavaPlugin {
 			if (sender instanceof Player){
 				if (args.length > 0) {
 					player.sendMessage(ChatColor.RED + "Incorrect usage");
+			
+					
+					
+				
 				} else {
 					if (marriage.get(player.getName()) != null) {
 						String target = marriage.get(player.getName());
+					
 						this.config.set(target, "is Married");
 						marriage.remove(target);
+						player.sendMessage(ChatColor.RED+ "Congratulations on your marriage with" + target);
+						
+						
 					} else {
+						player.sendMessage(ChatColor.RED + "No marriage request found");
 					}
 				}
 			}
 			else {
 				sender.sendMessage("Can only be used by player");
 			}
-		}
+			}
 		else if (cmd.getName().equalsIgnoreCase("no")) {
 			Player player = (Player) sender;
 			if (sender instanceof Player) {
